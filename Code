@@ -1,0 +1,82 @@
+
+#insert data set to google colab
+import pandas as pd
+df=pd.read_csv('/content/Restaurant_Reviews.csv')
+
+df
+
+from matplotlib import pyplot as plt
+df['Liked'].plot(kind='line', figsize=(8, 4), title='Liked')
+plt.gca().spines[['top', 'right']].set_visible(False)
+
+from matplotlib import pyplot as plt
+df['Liked'].plot(kind='hist', bins=20, title='Liked')
+plt.gca().spines[['top', 'right',]].set_visible(False)
+
+df.size
+
+df.shape
+
+df.Liked
+
+#input and output
+x=df.iloc[:,0].values
+y=df.iloc[:,1].values
+
+print(x)
+print(y)
+
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import train_test_split
+# Assuming 'X' is your text data and 'y' is the binary target variable
+x_Train, x_Test, y_Train, y_Test = train_test_split(x, y, test_size=0.2, random_state=42)
+
+# Vectorize the text data using TF-IDF (you may need to preprocess the text)
+tfidf_vectorizer = TfidfVectorizer(max_features=1000)  # You can adjust max_features
+x_Train_tfidf = tfidf_vectorizer.fit_transform(x_Train)
+x_Test_tfidf = tfidf_vectorizer.transform(x_Test)
+
+# Create and train the logistic regression model
+model = LogisticRegression()
+model.fit(x_Train_tfidf, y_Train)
+
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.naive_bayes import MultinomialNB  # Import Multinomial Naive Bayes
+from sklearn.model_selection import train_test_split
+
+# Assuming 'X' is your text data and 'y' is the binary target variable
+x_Train, x_Test, y_Train, y_Test = train_test_split(x, y, test_size=0.2, random_state=42)
+
+# Vectorize the text data using TF-IDF (you may need to preprocess the text)
+tfidf_vectorizer = TfidfVectorizer(max_features=1000)
+x_Train_tfidf = tfidf_vectorizer.fit_transform(x_Train)
+x_Test_tfidf = tfidf_vectorizer.transform(x_Test)
+
+# Create and train the Multinomial Naive Bayes model
+model = MultinomialNB()  # Use Multinomial Naive Bayes
+model.fit(x_Train_tfidf, y_Train)
+
+# Now you can evaluate the model's performance, make predictions, etc.
+
+from sklearn.metrics import accuracy_score
+
+# Assuming you have already trained your model and obtained predictions
+y_pred = model.predict(x_Test_tfidf)  # X_test_tfidf should contain your test data
+
+# Calculate the accuracy
+accuracy = accuracy_score(y_Test, y_pred)
+
+print("Accuracy:", accuracy*100)
+
+# Preprocess your new text data and convert it to TF-IDF vectors
+new_text_data = ["food is good"]  # Replace with your new text data
+new_text_data_tfidf = tfidf_vectorizer.transform(new_text_data)
+
+# Make predictions for the new data
+predictions = model.predict(new_text_data_tfidf)
+
+print(new_text_data_tfidf)  # Check the contents of new_text_data_tfidf
+
+predictions = model.predict(new_text_data_tfidf)
+print(predictions)
